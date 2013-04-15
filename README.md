@@ -1,13 +1,13 @@
-druploy
-=======
+Git PHP Deploy
+==============
 
-Post-Receive Hook for deploying a Drupal site with drush make
+PHP WebHOOK for pulling a repository upon a commit.
 
 
 Why?
 ----
 
-To automatically update a staging server for a drupal site when a new commit is made.
+To automatically update a staging server when a new commit is made.
 
 Status
 ------
@@ -18,4 +18,3 @@ Further reading
 -----------------
 
  * https://help.github.com/articles/post-receive-hooks
- * http://drupal.org/node/625094
