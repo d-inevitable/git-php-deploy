@@ -21,10 +21,9 @@ How?
 
  2. Create a config.ini with sections for each local repository to pull set the path variable to x.
 
-<code>
-[myrepox]
-path = x
-</code>
+    [myrepox]
+    
+    path = x
 
  3. Setup a webserver on which the hook is server. I recommend restricting the allowed remote IPs to those used by GitHub.
 
