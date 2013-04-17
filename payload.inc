@@ -17,7 +17,10 @@ class Payload {
 	
 	static function receive() {
 		try {
-			return new static(json_decode($_REQUEST['payload'], true));
+			if (isset($_REQUEST['payload']))
+				return new static(json_decode($_REQUEST['payload'], true));
+			else
+				return null;
 		}
 		catch (Exception $e) {
 			return null;
