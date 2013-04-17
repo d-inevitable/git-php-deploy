@@ -14,10 +14,36 @@ class Git {
 			$this->dir = $work_dir;
 	}
 	
+	/** Runs system command returning both outputs.
+	 * 
+	 * @param string $command
+	 * @return number|string
+	 */
+	
+	private function system($command) {
+		if (!($p=popen("($command)2>&1","r"))) {
+			return 126;
+		}
+	
+		while (!feof($p)) {
+			$line=fgets($p,1000);
+			$out .= $line;
+		}
+		
+		pclose($p);
+
+		return $out;
+	}
+	
+	
 	function run($command) {
 		$path = escapeshellarg($this->dir);
 
-		return `git --work-tree=$this->dir $command`;
+		$git = "git --work-tree=$path $command"; 
+		
+		echo "\033[1;30mRUNNING GIT:\033[0m $git";
+		
+		return `$command 1>&2`;
 	}
 	
 	function pull() {
