@@ -5,13 +5,7 @@ class Logging extends SplFileObject {
 	private $handler;
 	
 	function __construct($file_name) {
-
-		if (!file_exists($file_name))
-			touch($file_name);
-		
-		parent::__construct($file_name, 'w');
-		
-		$this->fseek(0, SEEK_END);
+		parent::__construct($file_name, 'a');
 	}
 	
 	private function lock() {
