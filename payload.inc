@@ -3,9 +3,9 @@
 require_once 'array_parser.inc';
 
 require_once 'commit.inc';
-require_once 'repoistory.inc';
+require_once 'repository.inc';
 
-class Payload extends ArrayObject {
+class Payload {
 	
 	use ArrayParser;
 	
@@ -17,7 +17,7 @@ class Payload extends ArrayObject {
 	
 	static function receive() {
 		try {
-			return new static(json_decode($_REQUEST['payload']));
+			return new static(json_decode($_REQUEST['payload'], true));
 		}
 		catch (Exception $e) {
 			return null;
@@ -27,7 +27,7 @@ class Payload extends ArrayObject {
 	function __construct(array $request) {
 		$this->parse_required(['ref'], $request);
 		
-		$this->reqository = $this->create_repsitory($request['repository']);
+		$this->reqository = $this->create_repository($request['repository']);
 		
 		foreach ($request['commits'] as $commit) {
 			$commit = $this->create_commit($commit);
@@ -43,7 +43,7 @@ class Payload extends ArrayObject {
 	 */
 
 	protected function create_repository(array $repository) {
-		return new Respository($repository);
+		return new Repository($repository);
 	}
 
 	/** Creats a new commit object.

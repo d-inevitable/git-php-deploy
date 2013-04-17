@@ -32,8 +32,8 @@ class Repository {
 			$id;
 
 	function __construct(array $repository) {
-		$this->created_at = new DateTime($repository['created_at']);
-		$this->pushed_at = new DateTime($repository['pushed_at']);
+		$this->created_at = date_create()->setTimestamp($repository['created_at']);
+		$this->pushed_at = date_create()->setTimestamp($repository['pushed_at']);
 		
 		$this->parse_required([
 				'id', 

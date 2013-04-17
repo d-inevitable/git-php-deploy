@@ -27,7 +27,7 @@ class Commit {
 		$this->parse_optional(['distinct', 'message', 'url'], $commit);
 		
 		$this->author = $this->create_author($commit['author']);
-		$this->committer = $this->create_commiter($commit['committer']);
+		$this->committer = $this->create_committer($commit['committer']);
 		
 		$gmt = new DateTimeZone('UTC');
 		$this->timestamp = DateTime::createFromFormat(DateTime::ISO8601, $commit['timestamp'])->setTimeZone($gmt);
