@@ -12,25 +12,36 @@ $log->log_ob_start();
 
 $payload = Payload::receive();
 
-$payload or exit;
 
-
-array_walk(parse_ini_file('config.ini', true), function (array $target) use($payload) {
+if ($payload) {
+	echo 'Payload received at ', date(DateTime::ISO8601), PHP_EOL;
 	
-	
-	
-	if (isset($target['payload']))
-		throw new InvalidArgumentException('Bad configuration argument "payload" encounterred');
+	array_walk(parse_ini_file('config.ini', true), function (array $target, $name) use($payload) {
+		if (isset($target['payload']))
+			throw new InvalidArgumentException('Bad configuration argument "payload" encounterred');
 		
-	extract($target);
-	
-	$git = new Git($path);
-	
-	if ($payload->reqository->name !== $git->name() or $payload->ref !== $git->ref())
-		return;
+		extract($target);
+		
+		$git = new Git($path);
+		
+		if ($payload->reqository->name !== $git->name() or $payload->ref !== $git->ref()) {
+			echo "Payload doesn't apply to $name", PHP_EOL;
+			return;
+		}
+			
+			
+		echo "Pulling $name as $path", PHP_EOL;
+		
+		$git->pull();
+		
+		echo "Done pulling $name at $path", PHP_EOL;
+	});
+}
+else
+	echo 'Invalid payload', PHP_EOL;
 
-	$git->pull();
-});
+
+echo "Operation complete", PHP_EOL;
 
 $log->log_ob_end();
 
