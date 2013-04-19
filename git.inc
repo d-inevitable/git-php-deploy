@@ -14,27 +14,6 @@ class Git {
 			$this->dir = $work_tree;
 	}
 	
-	/** Runs system command returning both outputs.
-	 * 
-	 * @param string $command
-	 * @return number|string
-	 */
-	
-	private function system($command) {
-		if (!($p=popen("($command)2>&1","r"))) {
-			return 126;
-		}
-	
-		while (!feof($p)) {
-			$line=fgets($p,1000);
-			$out .= $line;
-		}
-		
-		pclose($p);
-
-		return $out;
-	}
-	
 	
 	function run($command) {
 		$path = escapeshellarg($this->dir);
@@ -43,7 +22,7 @@ class Git {
 		
 		echo "\033[0;34mRUNNING GIT:\033[0m $git", PHP_EOL;
 		
-		return `$command 1>&2`;
+		return `$command`;
 	}
 	
 	function pull() {
