@@ -8,7 +8,7 @@ class Git {
 	static $remote = 'github.com';
 
 	function __construct($work_tree = null) {
-		if (is_null($work_dir))
+		if (is_null($work_tree))
 			$this->dir = getcwd();
 		else
 			$this->dir = $work_dir;
@@ -41,7 +41,7 @@ class Git {
 
 		$git = "git --work-tree=$path $command"; 
 		
-		echo "\033[1;30mRUNNING GIT:\033[0m $git";
+		echo "\033[0;34mRUNNING GIT:\033[0m $git", PHP_EOL;
 		
 		return `$command 1>&2`;
 	}
@@ -70,19 +70,17 @@ class Git {
 
 		$origin = preg_quote($origin, '!');
 		
-		if (preg_match("!$origin\s+(.*?)\s+\(fetch\)$!", $subject, $match))
-			$url = $match[1];
-		else
+		if (!preg_match("!$origin\s+(?<url>.*?)\s+\(fetch\)$!", $fetch, $info))
 			return null;
+
+		//parse_url doesn't work with non-numeric "port" so we need to do it by reg exp too:
 		
-		$info = parse_url($url);
+		$url = $info['url'];
+		$remote = preg_quote(static::$remote, '!');
 		
-		if ($info['host'] !== $this->remote)
-			return null;
+		if (!preg_match("!^(?:\w+://)?(?:\w+@)?$remote:(?<name>[\w-+_]+/[\w-+_]+)\.git?$!i", $url, $info))
+			throw new Exception("Unrecognized URL '$url'");
 		
-		if (preg_match('!^(\w+/\w+)\.git$!i', $info['path'], $match))
-			return $match[1];
-		else
-			return null;
+		return $info['name'];
 	}
 }
