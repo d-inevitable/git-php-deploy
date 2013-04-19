@@ -11,7 +11,7 @@ class Git {
 		if (is_null($work_tree))
 			$this->dir = getcwd();
 		else
-			$this->dir = $work_dir;
+			$this->dir = $work_tree;
 	}
 	
 	/** Runs system command returning both outputs.
