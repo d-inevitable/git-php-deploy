@@ -10,15 +10,12 @@ class PayloadTest extends PHPUnit_Framework_TestCase {
 	
 	public 	$request;
 	
-	function __construct() {
+	function setUp() {
 		$this->request = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::REQUEST_FILE), true);
 	}
 	
 	function testConstruction() {
-		$payload = new Payload($this->request);
-		
-		
-		return $payload;
+		return new Payload($this->request);
 	}
 	
 	/**
@@ -32,7 +29,7 @@ class PayloadTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInternalType('array', $payload->commits);
 		
-		$this->assertInstanceOf('Repository', $payload->reqository);
+		$this->assertInstanceOf('Repository', $payload->repository);
 		
 		foreach ($payload->commits as $commit)
 			$this->assertInstanceOf('Commit', $commit);

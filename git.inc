@@ -5,7 +5,8 @@ class Git {
 	
 	public $dir;
 	
-	static $remote = 'github.com';
+	static 	$remote = 'github.com',
+			$git = 'git';
 
 	function __construct($work_tree = null) {
 		if (is_null($work_tree))
@@ -14,16 +15,31 @@ class Git {
 			$this->dir = $work_tree;
 	}
 	
+	protected function tell($action, $command) {
+		echo "\033[0;34m$action:\033[0m $command", PHP_EOL;
+	}
 	
 	function run($command) {
 		$path = escapeshellarg($this->dir);
 
-		$git = "git --work-tree=$path $command"; 
+		$git = static::$git . " --work-tree=$path $command"; 
 		
-		echo "\033[0;34mRUNNING GIT:\033[0m $git", PHP_EOL;
+// 		$this->tell('RUNNING GIT', $git);
+		
+		return `$git`;
+	}
+	
+	function clone_repository($url) {
+		if (file_exists($this->dir))
+			throw new Exception("Directory '$this->dir' already exists");
+		
+		$url = escapeshellarg($url);
+		$git = static::$git;
+		$command = "$git clone $url $this->dir";
 		
 		return `$command`;
 	}
+	
 	
 	function pull() {
 		return $this->run('pull');
@@ -41,7 +57,7 @@ class Git {
 	function ref($target = 'HEAD') {
 		$target = escapeshellarg($target);
 
-		return $this->run("symbolic-ref $target");
+		return trim($this->run("symbolic-ref $target"), PHP_EOL);
 	}
 	
 	function name($origin = 'origin') {

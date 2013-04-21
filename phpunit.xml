@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit>
+  <testsuites>
+    <testsuite name="All">
+      <file>test/payload.test.inc</file>
+      <file>test/git.test.inc</file>
+      <file>test/deploy.test.inc</file>
+      <file>test/log.test.inc</file>
+      
+    </testsuite>
+  </testsuites>
+</phpunit>

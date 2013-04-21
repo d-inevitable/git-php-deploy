@@ -52,11 +52,14 @@ class Repository {
 				'language',
 				'open_issues',
 				'organization',
-				'owner',
 				'size',
 				'stargazers',
 				'watchers'
 			], $repository);
+		
+		if (isset($repository['owner']))
+			$this->owner = $this->find_or_create_contributor($repository['owner']);
+
 	}
 
 	function get_id() {
@@ -68,12 +71,18 @@ class Repository {
 	 */
 	
 	function find_or_create_contributor(array $details) {
-		@$contributor = &$this->contributors[$details['username']];
+		@$contributor = &$this->contributors[$details['name']];
 
 		if (!$contributor)
 			$contributor = new Contributor($this, $details);
 		
 		return $contributor;
+	}
+	
+	function full_name() {
+		$owner = $this->organization ? $this->organization : $this->owner->name;
+		
+		return "$owner/$this->name";
 	}
 	
 	

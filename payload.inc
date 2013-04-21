@@ -13,7 +13,7 @@ class Payload {
 			$after,
 			$ref,
 			$commits = [],
-			$reqository;
+			$repository;
 	
 	static function receive() {
 		try {
@@ -30,7 +30,7 @@ class Payload {
 	function __construct(array $request) {
 		$this->parse_required(['ref'], $request);
 		
-		$this->reqository = $this->create_repository($request['repository']);
+		$this->repository = $this->create_repository($request['repository']);
 		
 		foreach ($request['commits'] as $commit) {
 			$commit = $this->create_commit($commit);
@@ -55,7 +55,19 @@ class Payload {
 	 */
 	
 	protected function create_commit(array $commit) {
-		return new Commit($this->reqository, $commit);
+		return new Commit($this->repository, $commit);
+	}
+	
+	function find_applicable_work_trees(array $paths) {
+		require_once __DIR__ . '/git.inc';
+		
+		$gits = array_map(function($path) { 
+			return new Git($path);	
+		}, $paths);
+		
+		return array_filter($gits, function (Git $working) {
+			return $this->ref === $working->ref() and $this->repository->full_name() === $working->name();
+		});
 	}
 	
 }
