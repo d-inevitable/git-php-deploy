@@ -3,6 +3,7 @@
 require_once __DIR__ . '/logging.inc';
 
 require_once __DIR__ . '/deploy.inc';
+require_once __DIR__ . '/payload.inc';
 
 $log = new Logging('deploy.log');
 
