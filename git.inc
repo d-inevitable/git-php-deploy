@@ -20,11 +20,10 @@ class Git {
 	}
 	
 	function run($command) {
-		$path = escapeshellarg($this->dir);
-
-		$git = static::$git . " --work-tree=$path $command"; 
+		$worktree = escapeshellarg($this->dir);
+		$gitdir = escapeshellarg("$this->dir/.git");
 		
-// 		$this->tell('RUNNING GIT', $git);
+		$git = static::$git . " --git-dir=$gitdir --work-tree=$worktree $command";
 		
 		return `$git`;
 	}
@@ -73,7 +72,7 @@ class Git {
 		$url = $info['url'];
 		$remote = preg_quote(static::$remote, '!');
 		
-		if (!preg_match("!^(?:\w+://)?(?:\w+@)?$remote:(?<name>[\w-+_]+/[\w-+_]+)\.git?$!i", $url, $info))
+		if (!preg_match("!^(?:\w+://)?(?:\w+@)?{$remote}[:/](?<name>[\w-+_]+/[\w-+_]+)\.git?$!i", $url, $info))
 			throw new Exception("Unrecognized URL '$url'");
 		
 		return $info['name'];
